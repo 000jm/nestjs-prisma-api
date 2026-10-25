@@ -1,7 +1,5 @@
 
-FROM node:lts-alpine
-
-RUN apk add --no-cache bash
+FROM node:22-bullseye
 
 RUN npm i -g @nestjs/cli
 
