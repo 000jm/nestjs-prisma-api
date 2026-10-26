@@ -7,6 +7,7 @@ import { UnathorizedError } from "../types/UnathorizedError.js"
 export class UnathorizedInterceptor implements NestInterceptor {
 
     intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
+
         return next.handle().pipe(
             catchError(error => {
                 if(error instanceof UnathorizedError) {
@@ -16,6 +17,7 @@ export class UnathorizedInterceptor implements NestInterceptor {
                 }
             })
         )
+        
     }
 
 }

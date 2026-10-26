@@ -7,6 +7,7 @@ import { NotFoundError } from "../types/NotFoundError.js"
 export class NotFoundInterceptor implements NestInterceptor {
     
     intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
+
         return next.handle().pipe(
             catchError(error => {
                 if(error instanceof NotFoundError) {
@@ -16,6 +17,7 @@ export class NotFoundInterceptor implements NestInterceptor {
                 }
             })
         )
+        
     }
 
 }
