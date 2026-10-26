@@ -24,7 +24,7 @@ export class UsersRepository {
         
     }
 
-    findOne(id: number) {
+    async findOne(id: number) {
 
         return this.prisma.user.findUnique({
             where: {
@@ -36,16 +36,6 @@ export class UsersRepository {
 
     async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
 
-        const user = await this.prisma.user.findUnique({
-            where: {
-                id
-            }
-        })
-
-        if(!user) {
-            throw new NotFoundException(`User with id ${id}`)
-        }
-
         return this.prisma.user.update({
             where: {
                 id
@@ -55,7 +45,7 @@ export class UsersRepository {
 
     }
 
-    async remove(id: number) {
+    async delete(id: number) {
 
         await this.prisma.user.delete({
             where: {
