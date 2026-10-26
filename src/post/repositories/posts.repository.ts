@@ -65,7 +65,14 @@ export class PostsRepository {
                 author: {
                     select: {
                         name: true,
-                        email: true
+                        email: true,
+                        posts: {
+                            select: {
+                                id: true,
+                                title: true,
+                                createdAt: true
+                            }
+                        }
                     }
                 }
             }
@@ -73,11 +80,53 @@ export class PostsRepository {
     }
 
     async update(id: number, updatePostDto: UpdatePostDto) {
+        const { authorEmail } = updatePostDto
+
+        if(!authorEmail) {
+            return this.prisma.post.update({
+                data: updatePostDto,
+                where: {
+                    id
+                }
+            })
+        }
+
+        delete updatePostDto.authorEmail
+
+        const user = await this.prisma.user.findUnique({
+            where: {
+                email: authorEmail
+            }
+        })
+
+        if(!user) {
+            throw new NotFoundError(`Author not found with email ${authorEmail}`)
+        }
+
+        const data: Prisma.PostUpdateInput = {
+            ...updatePostDto,
+            author: {
+                connect: {
+                    email: authorEmail
+                }
+            }
+        }
+
         return this.prisma.post.update({
             where: {
                 id
             },
-            data: updatePostDto
+            data,
+            include: {
+                author: {
+                    select: {
+                        name: true,
+                        email: true,
+                        admin: true,
+                        posts: true
+                    }
+                }
+            }
         })
     }
 
