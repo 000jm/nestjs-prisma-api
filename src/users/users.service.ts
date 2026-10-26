@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { CreateUserDto } from './dto/create-user.dto.js'
 import { UpdateUserDto } from './dto/update-user.dto.js'
 import { UsersRepository } from './repositories/users.repository.js'
+import { NotFoundError } from '../common/errors/types/NotFoundError.js'
 
 @Injectable()
 export class UsersService {
@@ -13,19 +14,34 @@ export class UsersService {
     return this.usersRepository.create(createUserDto)
   }
 
-  findAll() {
-    return this.usersRepository.findAll()
+  async findAll() {
+    return await this.usersRepository.findAll()
   }
 
-  findOne(id: number): any {
-    return this.usersRepository.findOne(id)
+  async findOne(id: number): Promise<any> {
+    const user = await this.usersRepository.findOne(id)
+    if(!user) {
+      throw new NotFoundError(`User not found with id ${id}`)
+    }
+
+    return user
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.usersRepository.findOne(id)
+    if(!user) {
+      throw new NotFoundError(`User not found with id ${id}`)
+    }
+    
     return this.usersRepository.update(id, updateUserDto)
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    const user = await this.usersRepository.findOne(id)
+    if(!user) {
+      throw new NotFoundError(`User not found with id ${id}`)
+    }
+    
     return this.usersRepository.delete(id)
   }
 
