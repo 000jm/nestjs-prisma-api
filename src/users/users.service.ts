@@ -42,7 +42,7 @@ export class UsersService {
       throw new NotFoundError(`User not found with id ${id}`)
     }
     
-    return this.usersRepository.delete(id)
+    await this.usersRepository.delete(id)
   }
 
 }

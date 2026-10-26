@@ -37,6 +37,11 @@ export class PostService {
   }
 
   async remove(id: number) {
+    const post = await this.postsRepository.findOne(id)
+    if(!post) {
+      throw new NotFoundError(`Post not found with id ${id}`)
+    }
+    
     await this.postsRepository.delete(id)
   }
 
