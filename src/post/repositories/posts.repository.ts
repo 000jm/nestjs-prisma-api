@@ -13,6 +13,7 @@ export class PostsRepository {
     constructor(private readonly prisma: PrismaService) {}
 
     async create(createPostDto: CreatePostDto): Promise<PostEntity> {
+
         const { authorEmail } = createPostDto
 
         delete createPostDto.authorEmail
@@ -38,9 +39,11 @@ export class PostsRepository {
         return this.prisma.post.create({
             data
         })
+
     }
     
     async findAll(): Promise<PostEntity[]> {
+
         return await this.prisma.post.findMany({
             include: {
                 // author: true
@@ -54,10 +57,12 @@ export class PostsRepository {
                 }
             }
         })
+
     }
     
-    async findOne(id: number): Promise<any> {
-        return this.prisma.post.findUnique({
+    async findOne(id: number): Promise<PostEntity> {
+
+        const post = await this.prisma.post.findUnique({
             where: {
                 id
             },
@@ -70,16 +75,26 @@ export class PostsRepository {
                             select: {
                                 id: true,
                                 title: true,
-                                createdAt: true
+                                content: true,
+                                createdAt: true,
+                                updatedAt: true
                             }
                         }
                     }
                 }
             }
         })
+
+        if(!post) {
+            throw new NotFoundError(`Post not found with id ${id}`)
+        }
+
+        return post
+
     }
 
-    async update(id: number, updatePostDto: UpdatePostDto) {
+    async update(id: number, updatePostDto: UpdatePostDto): Promise<PostEntity> {
+
         const { authorEmail } = updatePostDto
 
         if(!authorEmail) {
@@ -131,11 +146,13 @@ export class PostsRepository {
     }
 
     async delete(id: number) {
+
         return this.prisma.post.delete({
             where: {
                 id
             }
         })
+        
     }
 
 }

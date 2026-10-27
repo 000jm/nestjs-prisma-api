@@ -43,25 +43,20 @@ export class UsersRepository {
         
     }
 
-    async findOne(id: number) {
+    async findOne(id: number): Promise<UserEntity | null> {
 
-        return this.prisma.user.findUnique({
-            where: {
-                id
-            },
+        return await this.prisma.user.findUnique({
+            where: { id },
             include: {
                 posts: {
                     select: {
-                        id: true,
                         title: true,
-                        content: true,
                         createdAt: true,
-                        updatedAt: true
-                    }
-                }
-            }
+                    },
+                },
+            },
         })
-        
+
     }
 
     async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
@@ -84,7 +79,7 @@ export class UsersRepository {
 
     }
 
-    async delete(id: number) {
+    async delete(id: number): Promise<void> {
 
         await this.prisma.user.delete({
             where: {
