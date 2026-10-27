@@ -60,9 +60,9 @@ export class PostsRepository {
 
     }
     
-    async findOne(id: number): Promise<PostEntity> {
+    async findOne(id: number): Promise<PostEntity | null> {
 
-        const post = await this.prisma.post.findUnique({
+        return await this.prisma.post.findUnique({
             where: {
                 id
             },
@@ -84,12 +84,6 @@ export class PostsRepository {
                 }
             }
         })
-
-        if(!post) {
-            throw new NotFoundError(`Post not found with id ${id}`)
-        }
-
-        return post
 
     }
 
@@ -143,6 +137,7 @@ export class PostsRepository {
                 }
             }
         })
+        
     }
 
     async delete(id: number) {

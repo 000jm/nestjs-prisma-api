@@ -4,21 +4,22 @@ import { CreatePostDto } from './dto/create-post.dto.js'
 import { UpdatePostDto } from './dto/update-post.dto.js'
 import { PostsRepository } from './repositories/posts.repository.js'
 import { NotFoundError } from '../common/errors/types/NotFoundError.js'
+import { PostEntity } from './entities/post.entity.js'
 
 @Injectable()
 export class PostService {
 
   constructor(private readonly postsRepository: PostsRepository) {}
   
-  async create(createPostDTO: CreatePostDto) {
+  async create(createPostDTO: CreatePostDto): Promise<PostEntity> {
     return this.postsRepository.create(createPostDTO)
   }
 
-  async findAll() {
+  async findAll(): Promise<PostEntity[]> {
     return await this.postsRepository.findAll()
   }
 
-  async findOne(id: number): Promise<any> {
+  async findOne(id: number): Promise<PostEntity> {
     const post = await this.postsRepository.findOne(id)
     if(!post) {
       throw new NotFoundError(`Post not found with id ${id}`)
@@ -27,7 +28,7 @@ export class PostService {
     return post
   }
 
-  async update(id: number, updatePostDto: UpdatePostDto) {
+  async update(id: number, updatePostDto: UpdatePostDto): Promise<PostEntity> {
     const post = await this.postsRepository.findOne(id)
     if(!post) {
       throw new NotFoundError(`Post not found with id ${id}`)
@@ -36,7 +37,7 @@ export class PostService {
     return this.postsRepository.update(id, updatePostDto)
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<void> {
     const post = await this.postsRepository.findOne(id)
     if(!post) {
       throw new NotFoundError(`Post not found with id ${id}`)
