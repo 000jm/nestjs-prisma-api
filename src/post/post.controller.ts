@@ -3,8 +3,9 @@ import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common'
 import { PostService } from './post.service.js'
 import { CreatePostDto } from './dto/create-post.dto.js'
 import { UpdatePostDto } from './dto/update-post.dto.js'
-import { ApiForbiddenResponse } from '@nestjs/swagger'
+import { ApiForbiddenResponse, ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Posts')
 @Controller('posts')
 export class PostController {
 

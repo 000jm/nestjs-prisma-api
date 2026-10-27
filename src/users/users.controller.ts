@@ -3,8 +3,9 @@ import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common'
 import { UsersService } from './users.service.js'
 import { CreateUserDto } from './dto/create-user.dto.js'
 import { UpdateUserDto } from './dto/update-user.dto.js'
-import { ApiForbiddenResponse, ApiResponse } from '@nestjs/swagger'
+import { ApiForbiddenResponse, ApiResponse, ApiTags } from '@nestjs/swagger'
 
+// @ApiTags('Users')
 @Controller('users')
 export class UsersController {
   
